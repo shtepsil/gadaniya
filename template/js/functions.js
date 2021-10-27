@@ -2,23 +2,46 @@ function cl(data){
     console.log(data);
 }
 
-function getInterpretation(Code){
-    var wrap = $('.w-g'),
+function getInterpretation(obj){
+    var $this = $(obj),
+        wrap = $('.w-g'),
         res = $('.res'),
-        load = $('.gadaniya img.loading'),
-        instr = wrap.find('.instruction'),
-        interp = wrap.find('.interpretation'),
+        load = $('.w-g [name=get_question] img.loading'),
+        main_error = $('.geks-go-error'),
         errors = wrap.find('.errors'),
+        code = $this.attr('data-code'),
         Data = {};
     
-    Data['code'] = Code;
+    if(code == ''){
+        if($this.attr('data-type') == 'geks'){
+            main_error.fadeIn(100,function(){
+                setTimeout(function(){
+                    main_error.fadeOut(100);
+                },2000);
+            });
+        }else{
+            wrap.find('.gq-errors').fadeIn(100,function(){
+                setTimeout(function(){
+                    wrap.find('.gq-errors').fadeOut(100);
+                },2000);
+            });
+        }
+        return;
+    }
+    
+    if($this.attr('data-type') == 'geks'){
+        load = $('.w-g .w-geks .load-layer');
+    }
+    
+    Data['code'] = code;
+    Data['question'] = wrap.find('[name=user_question]').val();
     Data['user_id'] = wrap.attr('data-user-id');
     
-    // cl(Data);
+//    cl(Data);
 //    return;
     
     $.ajax({
-        url:'/interpretation',
+        url:'/getinterpretation',
         type:'post',
         dataType:'json',
         cache:'false',
@@ -29,19 +52,21 @@ function getInterpretation(Code){
     }).done(function(data){
 //        res.html('Done<br>'+JSON.stringify(data));
         if(data.status == 200){
-            instr.fadeOut(100,function(){
-                interp.find('.text').html(data.text).promise().done(function(){
-                    interp.fadeIn(100);
-//                    if(typeof wrap.find('.history').html() === 'undefined' || wrap.find('.history').html() == ''){
-                        wrap.find('[name=view_history]').fadeIn(100);
-//                    }
-                });
-            });
+            location.href='/geks?code='+code
         }else{
-            instr.fadeOut(100,function(){
-                errors.html(data.message);
-                interp.fadeIn(100);
-            });
+            if($this.attr('data-type') == 'geks'){
+                main_error.fadeIn(100,function(){
+                    setTimeout(function(){
+                        main_error.fadeOut(100);
+                    },2000);
+                });
+            }else{
+                errors.fadeIn(100,function(){
+                    setTimeout(function(){
+                        errors.fadeOut(100);
+                    },3000);
+                });
+            }
         }
     }).fail(function(data){
         res.html('Fail<br>'+JSON.stringify(data));

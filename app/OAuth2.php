@@ -41,6 +41,10 @@ class OAuth2
                 $jwt->verify($_COOKIE['token']);
                 if($user = User::getUserById($jwt->getClaim($_COOKIE['token'],'user_id'))){
                     $_SESSION['user_id'] = $user['id'];
+                    if(!$user['id']){
+                        unset($_SESSION['user_id']);
+                        setcookie('token','',-1);
+                    }
                     return $user;
                 }else{
                     unset($_SESSION['user_id']);

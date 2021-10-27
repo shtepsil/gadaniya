@@ -1,2 +1,0 @@
-На странице views/site/index.php - вывести слайдер через цикл из БД
-Массив собран в Product.php getRecommendedProducts

@@ -94,7 +94,6 @@ User::$info = User::getUserById($_SESSION['user_id']);
                                 <ul class="nav navbar-nav collapse navbar-collapse">
                                     <li><a href="/">Главная</a></li>
                                     <li><a href="/gadaniya">Погадать</a></li>
-                                    <li><a href="/geks">Выбрать вариант</a></li>
                                 </ul>
                             </div>
                         </div>

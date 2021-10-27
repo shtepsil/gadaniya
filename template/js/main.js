@@ -87,9 +87,10 @@ $(document).ready(function(){
         location.href = '/';
     });
     
-    // Гексограмма
+    // Блок генерации гексограммы
     $('.w-g .click-layer').on('click',function(){
-        var g = $('.w-g ul.geks');
+        var wrap = $('.geks-generation'),
+            g = $('.w-g ul.geks');
         
         if(g.find('li').length == 6) return;
         
@@ -99,68 +100,15 @@ $(document).ready(function(){
             g.append('<li data-code="'+img+'"><img src="/template/images/'+img+'.jpg" alt="" /></li>');
             if(g.find('li').length == 6){
                 
-                var Code = [],
-                    i = 0;
+                var code = '';
                 g.find('li').each(function(){
-                    Code[i] = $(this).attr('data-code');
-                    i++;
+                    code += $(this).attr('data-code');
                 });
                 
-//                cl(Code);return;
+                wrap.find('[name=get_question]').attr('data-code',code).fadeIn(100);
                 
-                setTimeout(function(){
-                    getInterpretation(Code);
-                },200);
             }
         }
-    });
-    
-    // Начать снова. Т.е. очистить всё.
-    $('.w-g [name=clear]').on('click',function(){
-        var wrap = $('.w-g'),
-            instr = wrap.find('.instruction'),
-            interp = wrap.find('.interpretation'),
-            errors = wrap.find('.errors'),
-            g = wrap.find('ul.geks');
-        
-        errors.html('');
-        g.html('');
-        wrap.find('.int-h span').html('');
-        
-        interp.fadeOut(100,function(){
-            interp.find('.text').html('');
-            instr.fadeIn(100);
-        });
-        
-    });
-    
-    // Получить гексограмму
-    $('.w-g [name=get_geks]').on('click',function(){
-        var $this = $(this),
-            wrap = $('.w-g'),
-            instr = wrap.find('.instruction'),
-            interp = wrap.find('.interpretation'),
-            errors = wrap.find('.errors'),
-            g = wrap.find('ul.geks');
-        
-        g.html('');
-        errors.html('');
-        wrap.find('.int-h span').html('');
-        
-        var code = $this.attr('data-code').split('');
-        code.forEach(function(img, i, code) {
-            g.append('<li data-code="'+img+'"><img src="/template/images/'+img+'.jpg" alt="" /></li>');
-        });
-        
-        instr.fadeOut(100,function(){
-            wrap.find('.int-h span').html('на '+$this.attr('data-date'));
-            interp.find('.text').html($this.parent().find('span.text').html()).promise().done(function(){
-                interp.fadeIn(100);
-            });
-        });
-        
-        $('html, body').animate({ scrollTop: 0 }, 300);
-        
     });
 
     // Кнопка Очистить историю
@@ -227,6 +175,49 @@ $(document).ready(function(){
             },1500);
         });
 
+    });
+    
+    // Поле ввода "Введите свой вопрос"
+    $('[name=user_question]').on('focus',function(){
+        var $this = $(this),
+            wrap = $('.w-g'),
+            alerts = wrap.find('.alert');
+        
+        wrap.find('.geks-generation,.w-geks').fadeOut(100);
+        alerts.fadeOut(100,function(){
+            alerts.html('');
+        });
+    });
+    
+    // Кнопки "Генерироваь ответ" и "Получить ответ"
+    $('[name=generation],[name=choose]').on('click',function(){
+        var $this = $(this),
+            wrap = $('.w-g'),
+            alerts = wrap.find('.alert'),
+            g = wrap.find('ul.geks');
+        
+        if(wrap.find('input[name=user_question]').val() == ''){
+            alerts.html('Сначала введите свой впорос')
+                .promise().done(function(){
+                alerts.fadeIn(100);
+                setTimeout(function(){
+                     alerts.fadeOut(100,function(){
+                          alerts.html('');
+                     });
+                },5000);
+            });
+            return;
+        }
+        
+        wrap.find('.geks-generation,.w-geks').fadeOut(100);
+        
+        if($this.attr('name') == 'generation'){
+            wrap.find('.geks-generation').fadeIn(100);
+            g.html('');
+            wrap.find('[name=get_question]').attr('data-code','').hide().stop();
+        }else{
+            wrap.find('.w-geks').fadeIn(100);
+        }
     });
 
 });// JQuery

@@ -492,6 +492,10 @@ ul.sub-menu {
     right: -35px;
     bottom: 0;
 }
+.w-g .geks-generation .gq-errors{
+    color: red;
+    margin-top: 10px;
+}
 
 /*************************
 *******Geks page CSS******

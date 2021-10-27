@@ -28,12 +28,11 @@ class SiteController extends Controller
 
     public function actionGadaniya()
     {
-        $history = User::getHistory($_SESSION['user_id']);
         View::render('site/gadaniya',[
             'user'=>User::$info,
-            'history'=>$history
+            'geks'=>Interpretation::getInterpretations(),
+            'questions_history'=>User::getHistory($_SESSION['user_id'])
         ]);
-        return;
     }
 
     public function actionGeks()
@@ -41,31 +40,17 @@ class SiteController extends Controller
         $data = [];
         if(!empty($_GET['code'])){
             $data['geks_info'] = Interpretation::getInterpretation($_GET['code']);
-        }else{
-            $data['geks'] = Interpretation::getInterpretations();
         }
         View::render('site/geks',$data);
-        return;
     }
 
-    public function actionInterpretation()
+    public function actionGetinterpretation()
     {
         $post = $_POST;
-        $code = implode('',$post['code']);
-        if($int_info = Interpretation::getInterpretation($code)) {
-            User::addHistory([
-                'user_id'=>(int)$post['user_id'],
-                'code'=>$code,
-            ]);
-            $data = [
-                'status'=>200,
-                'text' => $int_info['text'],
-            ];
+        if(User::addHistory($post)){
+            $data = [ 'status'=>200 ];
         }else{
-            $data = [
-                'status'=>404,
-                'message'=>'Не найдена'
-            ];
+            $data = [ 'status'=>404 ];
         }
 
         Request::response($data);
@@ -74,9 +59,7 @@ class SiteController extends Controller
     public function actionClearhistory()
     {
         $post = $_POST;
-//        d::pe($post);
         if($text = User::deleteHistory((int)$post['user_id'])) {
-//        if(0) {
             $data = [
                 'status'=>200,
                 'text' => 'История удалена',

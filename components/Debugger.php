@@ -127,55 +127,17 @@ class Debugger{
         echo '</div>';
     }
 
-    public static function res($btn=false,$it=false){
+    public static function res($btn=''){
         $html = '';
 
-        if($btn !== false){
-            $b_value = 'Нажать';
-            $b_options = [
-                'class'=>'btn btn-primary btn-xs',
-            ];
-
-            if(!is_array($btn)){
-                $b_name = $btn;
-            }else{
-                if(count($btn)){
-
-                    if(isset($btn['class'])){
-                        Html::addCssClass($b_options,$btn['class']);
-                    }
-
-                    $b_options = ArrayHelper::merge($btn,$b_options);
-
-                }
-                $b_name = $b_options[0];
-                $b_value = ($b_options['value'])?:$b_value;
-                unset($b_options[0]);
-                unset($b_options['value']);
-            }
-
-            $html .= Html::input('button',$b_name,$b_value,$b_options).'<br><br>';
+        if($btn != ''){
+            $html .= '<button type="button" name="'.$btn.'" class="btn btn-primary btn-xs">
+        <img src="template/images/animate/loading.gif" class="loading" style="top:4px;left:-30px;" />
+        Нажать
+        </button><br><br>';
         }
 
-        if($it !== false){
-            if(!$b_name) $b_name = 'test';
-            $i_options = [
-                'class'=>'i-'.$b_name,
-            ];
-
-            if(isset($it['options']) AND count($it['options'])){
-                $i_options = ArrayHelper::merge($i_options,$it['options']);
-            }
-
-            $i_type = ($it['type'])?:'text';
-            $i_name = ($it['name'])?:'i_'.$b_name;
-            $i_value = ($it['value'])?:'';
-
-            $input = Html::input($i_type,$i_name,$i_value,$i_options);
-            $html = $input.$html;
-        }
-
-        $html .= '<div class="res">result</div>';
+        $html .= '<div class="res">result</div><br><br>';
         return $html;
     }
 

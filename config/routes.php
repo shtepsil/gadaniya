@@ -2,7 +2,7 @@
 
 return [
     'clearhistory' => 'site/clearhistory',
-    'interpretation' => 'site/interpretation',
+    'getinterpretation' => 'site/getinterpretation',
     'user/oauth2' => 'user/oauth2',
     'user/register' => 'user/register',
     'user/login' => 'user/login',

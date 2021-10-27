@@ -196,12 +196,13 @@ class User
     {
         $time = time();
         $db = Db::getConnection();
-        $sql = "INSERT INTO `history` (user_id, code, created_at) "
-            . "VALUES (?, ?, ?)";
+        $sql = "INSERT INTO `history` (user_id, code, question, created_at) "
+            . "VALUES (?, ?, ?, ?)";
         $result = $db->prepare($sql);
-        $result->bind_param('isi', $data['user_id'],$data['code'],$time);
+        $result->bind_param('issi', $data['user_id'],$data['code'],$data['question'],$time);
         try{
             $result->execute();
+            return true;
         }catch(\Exception $e){
             throw new AuthException('User add history error');
         }
@@ -214,7 +215,7 @@ class User
     public static function getHistory($user_id)
     {
         $db = Db::getConnection();
-        $sql = "SELECT history.user_id, history.created_at, interpretation.code, interpretation.text FROM history LEFT JOIN interpretation ON interpretation.code = history.code WHERE history.user_id = ?";
+        $sql = "SELECT * FROM `history` WHERE `user_id` = ? ORDER BY `created_at` DESC";
         $select = $db->prepare($sql);
         $select->bind_param('s', $user_id);
         try{
