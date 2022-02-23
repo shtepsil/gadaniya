@@ -1,7 +1,7 @@
 {
   "name": "sergey/main",
-  "description": "Описание моего composer проекта",
-  "license": "top-secret",
+  "description": "Проект примера моих навыков",
+  "license": "MIT",
   "authors": [
     {
       "name": "Sergey Brazhnikov",
